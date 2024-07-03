@@ -1,2 +1,4 @@
 # CRMMS-ESP-Summary
-Code to generate the CRMMS ESP Summary Word Docx
+Generate the CRMMS ESP Summary Word Docx using Github Actions
+
+## Requires the Current Month and the Previous Month "EnsembleOutput.xlsx" files uploaded to the "CurrentMonth" and "PreviousMonth" directories
