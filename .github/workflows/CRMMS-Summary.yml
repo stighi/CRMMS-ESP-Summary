@@ -21,7 +21,7 @@ jobs:
       run: Rscript -e 'install.packages(c("readxl", "flextable","tidyverse","cowplot","reshape2","ggpattern","knitr","rmarkdown"))' 
     
     - name: run-script
-      run: Rscript -e 'rmarkdown::render(input = "CRMMS-ESP-Summary/CRMMS-ESP-Summary.Rmd")'       
+      run: Rscript -e 'rmarkdown::render(input = "CRMMS-ESP-Summary.Rmd")'       
         
     - name: commit files
       run: |
