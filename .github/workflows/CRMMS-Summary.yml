@@ -17,6 +17,9 @@ jobs:
 
     - uses: r-lib/actions/setup-pandoc@v2
 
+    - name: Install packages1
+      run: Rscript -e 'install.packages("digest", repos="http://cran.us.r-project.org")'
+
     - name: Install packages
       run: Rscript -e 'install.packages(c("readxl", "flextable","tidyverse","cowplot","reshape2","ggpattern","knitr","rmarkdown"))' 
     
