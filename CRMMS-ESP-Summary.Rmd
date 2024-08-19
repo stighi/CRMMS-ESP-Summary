@@ -38,8 +38,9 @@ library(tidyr)
 library(reshape2)
 library(ggpattern)
 
-Last_month_file <- "PreviousMonth/EnsembleOutput.xlsx"       #In file path use either / or \\, do NOT use \
-Current_month_file <- "CurrentMonth/EnsembleOutput.xlsx"
+Last_month_file <- "C:/Temp/07_July/Output Data/EnsembleOutput.xlsx"       #In file path use either / or \\, do NOT use \
+
+Current_month_file <- "EnsembleOutput.xlsx"
 
 EOCY <- "2024-12-01"            #EOCY for Powell/Mead elevation ranges in summary points.
 PowellOT_WYrn <- "2025-01-01"   #WY for Powell Operating Tier and Release Volume tables.
@@ -116,7 +117,7 @@ rownames(Powell_Elev) <- Powell_Elev[,1]
 Powell_min <- round(min(Powell_Elev[EOCY,Traces]), digits =2)
 Powell_max <- round(max(Powell_Elev[EOCY,Traces]), digits =2)
 
-# Powell_Elev_eff <- as.data.frame(read_excel("EnsembleOutput.xlsx", sheet = "PowellElev"))
+# Powell_Elev_eff <- as.data.frame(read_excel(Current_month_file, sheet = "PowellElev"))
 # rownames(Powell_Elev_eff) <- Powell_Elev_eff[,1]
 # Powell_Eff <- as.data.frame(sapply(Powell_Elev_eff[EOCY_format, Traces],as.numeric))
 # Powell_min_eff <- round(min(Powell_Eff), digits =2)
@@ -127,7 +128,7 @@ rownames(Mead_Elev) <- Mead_Elev[,1]
 Mead_min <- round(min(Mead_Elev[EOCY,Traces]), digits =2)
 Mead_max <- round(max(Mead_Elev[EOCY,Traces]), digits =2)
 
-# Mead_Elev_eff <- as.data.frame(read_excel("EnsembleOutput.xlsx", sheet = "MeadElev"))
+# Mead_Elev_eff <- as.data.frame(read_excel(Current_month_file, sheet = "MeadElev"))
 # rownames(Mead_Elev_eff) <- Mead_Elev_eff[,1]
 # Mead_Eff <- as.data.frame(sapply(Mead_Elev_eff[EOCY_format, Traces],as.numeric))
 # Mead_min_eff <- round(min(Mead_Eff), digits =2)
@@ -198,6 +199,24 @@ G823_Y4 <- c(PT4_PowellRel(PowellRV, Time_Calc(PowellOT_WYrn, 2)), PT4_PowellRel
 
 tab_PowellRV <- data.frame(L823_Y2, E823_Y2, G823_Y2, L823_Y3, E823_Y3, G823_Y3, L823_Y4, E823_Y4, G823_Y4)
 row.names(tab_PowellRV) <- c(Current_month_rn,Previous_month_rn,"Difference")
+
+# BR 8/19/24 added new table
+#Percent of Traces with Powell Release Adjustment to Avoid Declining Below 3,500 ft during the CY
+
+PowellConst <- as.data.frame(read_excel(Current_month_file, sheet = "PowellConstrained3500Bypass"))
+rownames(PowellConst) <- PowellConst[,1]
+PowellConst_LM <- as.data.frame(read_excel(Last_month_file, sheet = "PowellConstrained3500Bypass"))
+rownames(PowellConst_LM) <- PowellConst_LM[,1]
+
+PowellConst_1 <- c(PT(PowellConst, Year1, 1), PT(PowellConst_LM, Year1, 1), Diff(PT(PowellConst, Year1, 1), PT(PowellConst_LM, Year1, 1)))
+PowellConst_2 <- c(PT(PowellConst, Year2, 1), PT(PowellConst_LM, Year2, 1), Diff(PT(PowellConst, Year2, 1), PT(PowellConst_LM, Year2, 1)))
+PowellConst_3 <- c(PT(PowellConst, Year3, 1), PT(PowellConst_LM, Year3, 1), Diff(PT(PowellConst, Year3, 1), PT(PowellConst_LM, Year3, 1)))
+PowellConst_4 <- c(PT(PowellConst, Year4, 1), PT(PowellConst_LM, Year4, 1), Diff(PT(PowellConst, Year4, 1), PT(PowellConst_LM, Year4, 1)))
+PowellConst_5 <- c(PT(PowellConst, Year5, 1), PT(PowellConst_LM, Year5, 1), Diff(PT(PowellConst, Year5, 1), PT(PowellConst_LM, Year5, 1)))
+tab_PowellConst <- data.frame(PowellConst_1, PowellConst_2, PowellConst_3, PowellConst_4, PowellConst_5)
+row.names(tab_PowellConst) <- c(Current_month_rn,Previous_month_rn,"Difference")
+names(tab_PowellConst) <- c(Year_format(Year1), Year_format(Year2), Year_format(Year3), Year_format(Year4), Year_format(Year5))
+
 
 #Percent of Traces with Powell Physical Elevation < Upper Basin DCP Trigger Elev of 3,525 in any month
 
@@ -331,7 +350,7 @@ names(tab_Mead895) <- c(Year_format(Year2), Year_format(Year3), Year_format(Year
 
 # #Percent of Traces with MSCP Violation
 # 
-# MSCP <- as.data.frame(read_excel("EnsembleOutput.xlsx", sheet = "MeadData.MSCPViolation"))
+# MSCP <- as.data.frame(read_excel(Current_month_file, sheet = "MeadData.MSCPViolation"))
 # rownames(MSCP) <- MSCP[,1]
 # MSCP_LM <- as.data.frame(read_excel(Last_month_file, sheet = "MeadData.MSCPViolation"))
 # rownames(MSCP_LM) <- MSCP_LM[,1]
@@ -368,6 +387,15 @@ ft_PowellRV <- bold(ft_PowellRV, j = 1, part = "body")
 ft_PowellRV <- padding(ft_PowellRV, padding.left = 3, padding.right = 3, part = "all")
 ft_PowellRV %>% autofit()
 ```
+* ADD BULLETS OF NOTE HERE
+<br>
+
+% Traces with Powell Release Adjustment to Avoid Declining Below 3,500 ft during the CY:
+```{r ft.align="left", echo=FALSE}
+TabFormat(tab_PowellConst)
+```
+* ADD BULLETS OF NOTE HERE
+
 <br>
 % Traces with Powell Elevation below the Upper Basin DCP Trigger elevation of 3,525 ft in any month during the CY:
 ```{r ft.align="left", echo=FALSE}
@@ -561,15 +589,15 @@ ggplot(Mead_Flow2, aes(x = Trace_Years, y = value)) +
 
 #Annual Mead Inflow Analysis - Only Inflow plotted, No outflow
 
-#Mead_Inflow <- as.data.frame(read_excel("EnsembleOutput.xlsx", sheet = "Mead.Inflow"))
+#Mead_Inflow <- as.data.frame(read_excel(Current_month_file, sheet = "Mead.Inflow"))
 #Mead_years <- as.numeric(format(as.Date(Mead_Inflow[,1]), '%Y'))
 #Mead_Inflow_df <- cbind(Mead_years, Mead_Inflow[-1])
 #Mead_Inflow_yr <- aggregate(.~Mead_years, data = Mead_Inflow_df, FUN=sum)
 #rownames(Mead_Inflow_yr) <- Mead_Inflow_yr[,1]
 
-#LCShortage <- as.data.frame(read_excel("EnsembleOutput.xlsx", sheet = "Shortage.Shortage Flag"))
+#LCShortage <- as.data.frame(read_excel(Current_month_file, sheet = "Shortage.Shortage Flag"))
 #rownames(LCShortage) <- LCShortage[,1]
-#LCSurplus <- as.data.frame(read_excel("EnsembleOutput.xlsx", sheet = "Surplus.AnnualSurplusFlag"))
+#LCSurplus <- as.data.frame(read_excel(Current_month_file, sheet = "Surplus.AnnualSurplusFlag"))
 #rownames(LCSurplus) <- LCSurplus[,1]
 
 #Mead_Inflow_yr_df <- data.frame(Trace_Years = as.character(t(Years)), NextCY_Inflow = as.numeric(Mead_Inflow_yr[as.character(Next_WY),Traces]), ShortageFlag = t(LCShortage[as.character(Next_WY + 1),Traces]), SurplusFlag = t(LCSurplus[as.character(Next_WY + 1),Traces]))
