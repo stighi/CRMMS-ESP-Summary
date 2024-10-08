@@ -43,7 +43,7 @@ Current_month_file <- "CurrentMonth/EnsembleOutput.xlsx"
 
 EOCY <- "2024-12-01"            #EOCY for Powell/Mead elevation ranges in summary points.
 PowellOT_WYrn <- "2025-01-01"   #WY for Powell Operating Tier and Release Volume tables.
-Year1 <- "2024-01-01"           #1st Yr Powell/MSCP tables. Code calculates Year2 (1st yr Mead tables).
+Year1 <- "2025-01-01"           #1st Yr Powell/MSCP tables. Code calculates Year2 (1st yr Mead tables).
 date <- Sys.Date()              #Use Sys.Date() when current date is in the same month as the ESP run. Replace with as.Date("YYYY-MM-DD") to specify a month different than current date.
 
 set_flextable_defaults(fonts_ignore=TRUE, font.size = 12, font.family = "Times New Roman", digits = 0, padding.top = 1, padding.bottom = 1, padding.left = 7, padding.right =7)
