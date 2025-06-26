@@ -41,9 +41,9 @@ library(ggpattern)
 Last_month_file <- "PreviousMonth/EnsembleOutput.xlsx"       #In file path use either / or \\, do NOT use \
 Current_month_file <- "CurrentMonth/EnsembleOutput.xlsx"
 
-EOCY <- "2024-12-01"            #EOCY for Powell/Mead elevation ranges in summary points.
-PowellOT_WYrn <- "2025-01-01"   #WY for Powell Operating Tier and Release Volume tables.
-Year1 <- "2024-01-01"           #1st Yr Powell/MSCP tables. Code calculates Year2 (1st yr Mead tables).
+EOCY <- "2025-12-01"            #EOCY for Powell/Mead elevation ranges in summary points.
+PowellOT_WYrn <- "2026-01-01"   #WY for Powell Operating Tier and Release Volume tables.
+Year1 <- "2025-01-01"           #1st Yr Powell/MSCP tables. Code calculates Year2 (1st yr Mead tables).
 date <- Sys.Date()              #Use Sys.Date() when current date is in the same month as the ESP run. Replace with as.Date("YYYY-MM-DD") to specify a month different than current date.
 
 set_flextable_defaults(fonts_ignore=TRUE, font.size = 12, font.family = "Times New Roman", digits = 0, padding.top = 1, padding.bottom = 1, padding.left = 7, padding.right =7)
@@ -305,6 +305,30 @@ tab_Mead1045 <- data.frame(Mead1045_2, Mead1045_3, Mead1045_4, Mead1045_5)
 row.names(tab_Mead1045) <- c(Current_month_rn,Previous_month_rn,"Difference")
 names(tab_Mead1045) <- c(Year_format(Year2), Year_format(Year3), Year_format(Year4), Year_format(Year5))
 
+# BR 1/29/25 added new table
+#Percent of Traces with Mead going Below 1,350 ft during the CY
+
+Mead1035 <- as.data.frame(read_excel(Current_month_file, sheet = "MeadData.MeadBelow1035_Annual"))
+rownames(Mead1035) <- Mead1035[,1]
+
+Mead1035_LM <- as.data.frame(read_excel(Last_month_file, sheet = "MeadData.MeadBelow1035_Annual"))
+rownames(Mead1035_LM) <- Mead1035_LM[,1]
+Mead1035_1 <- c(PT(Mead1035, Year1, 1), PT(Mead1035_LM, Year1, 1), Diff(PT(Mead1035, Year1, 1), 
+                                                                        PT(Mead1035_LM, Year1, 1)))
+Mead1035_2 <- c(PT(Mead1035, Year2, 1), PT(Mead1035_LM, Year2, 1), Diff(PT(Mead1035, Year2, 1), 
+                                                                        PT(Mead1035_LM, Year2, 1)))
+Mead1035_3 <- c(PT(Mead1035, Year3, 1), PT(Mead1035_LM, Year3, 1), Diff(PT(Mead1035, Year3, 1), 
+                                                                        PT(Mead1035_LM, Year3, 1)))
+Mead1035_4 <- c(PT(Mead1035, Year4, 1), PT(Mead1035_LM, Year4, 1), Diff(PT(Mead1035, Year4, 1), 
+                                                                        PT(Mead1035_LM, Year4, 1)))
+Mead1035_5 <- c(PT(Mead1035, Year5, 1), PT(Mead1035_LM, Year5, 1), Diff(PT(Mead1035, Year5, 1), 
+                                                                        PT(Mead1035_LM, Year5, 1)))
+  
+tab_Mead1035 <- data.frame(Mead1035_1, Mead1035_2, Mead1035_3, Mead1035_4, Mead1035_5)
+row.names(tab_Mead1035) <- c(Current_month_rn,Previous_month_rn,"Difference")
+names(tab_Mead1035) <- c(Year_format(Year1), Year_format(Year2), Year_format(Year3), Year_format(Year4),
+                         Year_format(Year5))
+
 #Percent of Traces with Lower Basin Shortage (<= 1,025 on Jan 1)
 
 Mead1025 <- as.data.frame(read_excel(Current_month_file, sheet = "DCPBWSP_Type"))
@@ -318,6 +342,30 @@ Mead1025_5 <- c(PT2(Mead1025, Year5, 0), PT2(Mead1025_LM, Year5, 0), Diff(PT2(Me
 tab_Mead1025 <- data.frame(Mead1025_2, Mead1025_3, Mead1025_4, Mead1025_5)
 row.names(tab_Mead1025) <- c(Current_month_rn,Previous_month_rn,"Difference")
 names(tab_Mead1025) <- c(Year_format(Year2), Year_format(Year3), Year_format(Year4), Year_format(Year5))
+
+# BR 6/24/25 added new table
+#Percent of Traces with Mead going Below 1,000 ft during the CY
+
+Mead1000 <- as.data.frame(read_excel(Current_month_file, sheet = "MeadData.MeadBelow1000_Annual"))
+rownames(Mead1000) <- Mead1000[,1]
+
+Mead1000_LM <- as.data.frame(read_excel(Last_month_file, sheet = "MeadData.MeadBelow1000_Annual"))
+rownames(Mead1000_LM) <- Mead1000_LM[,1]
+Mead1000_1 <- c(PT(Mead1000, Year1, 1), PT(Mead1000_LM, Year1, 1), Diff(PT(Mead1000, Year1, 1), 
+                                                                        PT(Mead1000_LM, Year1, 1)))
+Mead1000_2 <- c(PT(Mead1000, Year2, 1), PT(Mead1000_LM, Year2, 1), Diff(PT(Mead1000, Year2, 1), 
+                                                                        PT(Mead1000_LM, Year2, 1)))
+Mead1000_3 <- c(PT(Mead1000, Year3, 1), PT(Mead1000_LM, Year3, 1), Diff(PT(Mead1000, Year3, 1), 
+                                                                        PT(Mead1000_LM, Year3, 1)))
+Mead1000_4 <- c(PT(Mead1000, Year4, 1), PT(Mead1000_LM, Year4, 1), Diff(PT(Mead1000, Year4, 1), 
+                                                                        PT(Mead1000_LM, Year4, 1)))
+Mead1000_5 <- c(PT(Mead1000, Year5, 1), PT(Mead1000_LM, Year5, 1), Diff(PT(Mead1000, Year5, 1), 
+                                                                        PT(Mead1000_LM, Year5, 1)))
+  
+tab_Mead1000 <- data.frame(Mead1000_1, Mead1000_2, Mead1000_3, Mead1000_4, Mead1000_5)
+row.names(tab_Mead1000) <- c(Current_month_rn,Previous_month_rn,"Difference")
+names(tab_Mead1000) <- c(Year_format(Year1), Year_format(Year2), Year_format(Year3), Year_format(Year4),
+                         Year_format(Year5))
 
 #Percent of Traces with Lake Mead <= 950 any month
 
@@ -427,10 +475,22 @@ TabFormat(tab_Mead1050)
 TabFormat(tab_Mead1045)
 ```
 \newpage
+% Traces with Lake Mead Elevation < 1,035 ft:
+```{r ft.align="left", echo=FALSE}
+TabFormat(tab_Mead1035)
+```
+* ADD BULLETS OF NOTE HERE
+
 % Traces with Lower Basin Shortage (Lake Mead Elevation <= 1,025 ft on January 1):
 ```{r ft.align="left", echo=FALSE}
 TabFormat(tab_Mead1025)
 ```
+
+% Traces with Lake Mead Elevation < 1,000 ft in any month:
+```{r ft.align="left", echo=FALSE}
+TabFormat(tab_Mead1000)
+```
+
 
 % Traces with Lake Mead Elevation <= 950 ft in any month:
 ```{r ft.align="left", echo=FALSE}
@@ -662,31 +722,31 @@ TSum <- function(x, y, z){
 }
 
 LC_Condition <- c('Surplus','Normal', 'Shortage - Level 1', 'Shortage - Level 2', 'Shortage - Level 3')
-Year_new = c("2023","2024","2025","2026","2027")
+Year_new = c("2025","2026","2027", "2028", "2029")
 LCShortage_df <- data.frame(ESPRun = rep(c(Current_month, Previous_month), each = 5), 
-                            Condition = rep(LC_Condition), 
+                            Condition = rep(factor(LC_Condition, levels = LC_Condition)), 
                             Year_data = rep(Year_new, each = 10), 
-    Trace_data = c(TSum(LCSurplus,"2023",1),(TSum(LCShortage, "2023",0)-TSum(LCSurplus,"2023",1)),
-                   TSum(LCShortage, "2023",1),TSum(LCShortage, "2023",2),
-                   TSum(LCShortage, "2023",3), TSum(LCSurplus_lm,"2023",1),
-                   TSum(LCShortage_lm, "2023",0),(TSum(LCShortage_lm, "2023",1)-TSum(LCShortage_lm, "2023",0)),
-                   TSum(LCShortage_lm, "2023",2),TSum(LCShortage_lm, "2023",3),
-                   TSum(LCSurplus,"2024",1), (TSum(LCShortage,"2024",0)-TSum(LCSurplus,"2024",1)),
-                   TSum(LCShortage,"2024",1), TSum(LCShortage,"2024",2), TSum(LCShortage,"2024",3),
-                   TSum(LCSurplus_lm,"2024",1), (TSum(LCShortage_lm,"2024",0)-TSum(LCSurplus_lm,"2024",1)), 
-                   TSum(LCShortage_lm,"2024",1), TSum(LCShortage_lm,"2024",2), TSum(LCShortage_lm,"2024",3),
-                   TSum(LCSurplus,"2025",1), (TSum(LCShortage,"2025",0)-TSum(LCSurplus,"2025",1)), 
-                   TSum(LCShortage,"2025",1), TSum(LCShortage,"2025",2), TSum(LCShortage,"2025",3),
-                   TSum(LCSurplus_lm,"2025",1), (TSum(LCShortage_lm,"2025",0)-TSum(LCSurplus_lm,"2025",1)), 
-                   TSum(LCShortage_lm,"2025",1), TSum(LCShortage_lm,"2025",2), TSum(LCShortage_lm,"2025",3),
-                   TSum(LCSurplus,"2026",1), (TSum(LCShortage,"2026",0)-TSum(LCSurplus,"2026",1)), 
+    Trace_data = c(TSum(LCSurplus,"2025",1),(TSum(LCShortage, "2025",0)-TSum(LCSurplus,"2025",1)),
+                   TSum(LCShortage, "2025",1),TSum(LCShortage, "2025",2),
+                   TSum(LCShortage, "2025",3), TSum(LCSurplus_lm,"2025",1),
+                   TSum(LCShortage_lm, "2025",0),(TSum(LCShortage_lm, "2025",1)-TSum(LCShortage_lm, "2025",0)),
+                   TSum(LCShortage_lm, "2025",2),TSum(LCShortage_lm, "2025",3),
+                   TSum(LCSurplus,"2026",1), (TSum(LCShortage,"2026",0)-TSum(LCSurplus,"2026",1)),
                    TSum(LCShortage,"2026",1), TSum(LCShortage,"2026",2), TSum(LCShortage,"2026",3),
                    TSum(LCSurplus_lm,"2026",1), (TSum(LCShortage_lm,"2026",0)-TSum(LCSurplus_lm,"2026",1)), 
                    TSum(LCShortage_lm,"2026",1), TSum(LCShortage_lm,"2026",2), TSum(LCShortage_lm,"2026",3),
-                   TSum(LCSurplus,"2027",1), (TSum(LCShortage,"2027",0)-TSum(LCSurplus,"2027",1)),
+                   TSum(LCSurplus,"2027",1), (TSum(LCShortage,"2027",0)-TSum(LCSurplus,"2027",1)), 
                    TSum(LCShortage,"2027",1), TSum(LCShortage,"2027",2), TSum(LCShortage,"2027",3),
-                   TSum(LCSurplus_lm,"2027",1), (TSum(LCShortage_lm,"2027",0)-TSum(LCSurplus_lm,"2027",1)),
-                   TSum(LCShortage_lm,"2027",1), TSum(LCShortage_lm,"2027",2), TSum(LCShortage_lm,"2027",3)))
+                   TSum(LCSurplus_lm,"2027",1), (TSum(LCShortage_lm,"2027",0)-TSum(LCSurplus_lm,"2027",1)), 
+                   TSum(LCShortage_lm,"2027",1), TSum(LCShortage_lm,"2027",2), TSum(LCShortage_lm,"2027",3),
+                   TSum(LCSurplus,"2028",1), (TSum(LCShortage,"2028",0)-TSum(LCSurplus,"2028",1)), 
+                   TSum(LCShortage,"2028",1), TSum(LCShortage,"2028",2), TSum(LCShortage,"2028",3),
+                   TSum(LCSurplus_lm,"2028",1), (TSum(LCShortage_lm,"2028",0)-TSum(LCSurplus_lm,"2028",1)), 
+                   TSum(LCShortage_lm,"2028",1), TSum(LCShortage_lm,"2028",2), TSum(LCShortage_lm,"2028",3),
+                   TSum(LCSurplus,"2029",1), (TSum(LCShortage,"2029",0)-TSum(LCSurplus,"2029",1)),
+                   TSum(LCShortage,"2029",1), TSum(LCShortage,"2029",2), TSum(LCShortage,"2029",3),
+                   TSum(LCSurplus_lm,"2029",1), (TSum(LCShortage_lm,"2029",0)-TSum(LCSurplus_lm,"2029",1)),
+                   TSum(LCShortage_lm,"2029",1), TSum(LCShortage_lm,"2029",2), TSum(LCShortage_lm,"2029",3)))
 
 #Figure to use with no shading or note about post-2026 operations:
 
@@ -694,7 +754,7 @@ LCShortage_df <- data.frame(ESPRun = rep(c(Current_month, Previous_month), each 
 
 #Figure to use to include shading and note about post-2026 operations:
 
-years_to_exclude = c(2023) # Add years here as a comma separated list to exclude them from the figure below
+years_to_exclude = c(2023,2024) # Add years here as a comma separated list to exclude them from the figure below
 
 ggplot(subset(LCShortage_df, !Year_data %in% years_to_exclude), aes(x = ESPRun, y = Trace_data, fill = Condition)) + geom_bar(position='stack', stat='identity') + theme_bw() + facet_grid(~Year_data, scales = "free_x") + labs(x = ' ',y = "Number of Traces") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) + scale_y_continuous(breaks = seq(0,35, by =5), expand = c(0,0)) + geom_rect(data = subset(LCShortage_df, Year_data > 2026), aes(xmin=-Inf, xmax = Inf, ymin = 0, ymax = Inf), fill = 'black', alpha = 0.03) + scale_fill_manual(values = c('#ddd6ac', '#a6cee3','#1f78b4','#b2df8a','#33a02c'), breaks = LC_Condition) + ggtitle(bquote("Lower Basin Operating Condition")) + labs(caption = bquote('Note: For modeling purposes, these projections assume a continuation of the Interim Guidelines, DCP and Minute 323 \nbeyond 2026. These agreements expire at the end of the 2026, and Reclamation is beginning a process \nto develop operating strategies for post-2026.')) + theme(plot.caption=element_text(hjust = 0, size = 10))
 
