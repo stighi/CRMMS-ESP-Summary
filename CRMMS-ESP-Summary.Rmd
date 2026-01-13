@@ -43,7 +43,7 @@ Current_month_file <- "CurrentMonth/EnsembleOutput.xlsx"
 
 EOCY <- "2025-12-01"            #EOCY for Powell/Mead elevation ranges in summary points.
 PowellOT_WYrn <- "2026-01-01"   #WY for Powell Operating Tier and Release Volume tables.
-Year1 <- "2025-01-01"           #1st Yr Powell/MSCP tables. Code calculates Year2 (1st yr Mead tables).
+Year1 <- "2026-01-01"           #1st Yr Powell/MSCP tables. Code calculates Year2 (1st yr Mead tables).
 date <- Sys.Date()              #Use Sys.Date() when current date is in the same month as the ESP run. Replace with as.Date("YYYY-MM-DD") to specify a month different than current date.
 
 set_flextable_defaults(fonts_ignore=TRUE, font.size = 12, font.family = "Times New Roman", digits = 0, padding.top = 1, padding.bottom = 1, padding.left = 7, padding.right =7)
@@ -70,9 +70,11 @@ TabFormat <- function(t, f){
 #Time calculations
 Current_month <- format(date, '%B %Y') 
 Current_month_rn <- format(date, '%B')
+
 Current_month_abbr <- toupper(format(date, '%b%y'))
 Previous_month <- format(date %m-% months(1), '%B %Y')
 Previous_month_rn <- format(date %m-% months(1), '%B')
+
 EOCY_range <- as.numeric(format(as.Date(EOCY), '%Y'))
 EOCY_format <- as.character(as.Date(EOCY) %m-% months(11))
 PowellOT_WY <- as.numeric(format(as.Date(PowellOT_WYrn), '%Y'))
@@ -216,6 +218,24 @@ tab_PowellConst <- data.frame(PowellConst_1, PowellConst_2, PowellConst_3, Powel
 row.names(tab_PowellConst) <- c(Current_month_rn,Previous_month_rn,"Difference")
 names(tab_PowellConst) <- c(Year_format(Year1), Year_format(Year2), Year_format(Year3), Year_format(Year4), Year_format(Year5))
 
+# BR 10/27/25 added new table
+# Percent of Traces with Powell Release Adjustment to Avoid Declining Below 3,500 ft during the CY and 
+# Release volume less than 7.48 maf
+
+PowellConst748 <- as.data.frame(read_excel(Current_month_file, sheet = "PowellConstrained3500Less748"))
+rownames(PowellConst748) <- PowellConst748[,1]
+PowellConst748_LM <- as.data.frame(read_excel(Last_month_file, sheet = "PowellConstrained3500Less748"))
+rownames(PowellConst748_LM) <- PowellConst748_LM[,1]
+
+# PowellConst748_1 <- c(PT(PowellConst748, Year1, 1), PT(PowellConst748_LM, Year1, 1), Diff(PT(PowellConst748, Year1, 1), PT(PowellConst748_LM, Year1, 1)))
+PowellConst748_2 <- c(PT(PowellConst748, Year2, 1), PT(PowellConst748_LM, Year2, 1), Diff(PT(PowellConst748, Year2, 1), PT(PowellConst748_LM, Year2, 1)))
+PowellConst748_3 <- c(PT(PowellConst748, Year3, 1), PT(PowellConst748_LM, Year3, 1), Diff(PT(PowellConst748, Year3, 1), PT(PowellConst748_LM, Year3, 1)))
+PowellConst748_4 <- c(PT(PowellConst748, Year4, 1), PT(PowellConst748_LM, Year4, 1), Diff(PT(PowellConst748, Year4, 1), PT(PowellConst748_LM, Year4, 1)))
+PowellConst748_5 <- c(PT(PowellConst748, Year5, 1), PT(PowellConst748_LM, Year5, 1), Diff(PT(PowellConst748, Year5, 1), PT(PowellConst748_LM, Year5, 1)))
+tab_PowellConst748 <- data.frame(PowellConst748_2, PowellConst748_3, PowellConst748_4, PowellConst748_5)
+row.names(tab_PowellConst748) <- c(Current_month_rn,Previous_month_rn,"Difference")
+names(tab_PowellConst748) <- c(Year_format(Year2), Year_format(Year3), Year_format(Year4), Year_format(Year5))
+
 
 #Percent of Traces with Powell Physical Elevation < Upper Basin DCP Trigger Elev of 3,525 in any month
 
@@ -306,7 +326,7 @@ row.names(tab_Mead1045) <- c(Current_month_rn,Previous_month_rn,"Difference")
 names(tab_Mead1045) <- c(Year_format(Year2), Year_format(Year3), Year_format(Year4), Year_format(Year5))
 
 # BR 1/29/25 added new table
-#Percent of Traces with Mead going Below 1,350 ft during the CY
+#Percent of Traces with Mead going Below 1,035 ft during the CY
 
 Mead1035 <- as.data.frame(read_excel(Current_month_file, sheet = "MeadData.MeadBelow1035_Annual"))
 rownames(Mead1035) <- Mead1035[,1]
@@ -444,11 +464,18 @@ TabFormat(tab_PowellConst)
 * ADD BULLETS OF NOTE HERE
 
 <br>
+% Traces with Powell Release Adjustment to Avoid Declining Below 3,500 ft during the CY and Powell release less than 7.48 maf:
+```{r ft.align="left", echo=FALSE}
+TabFormat(tab_PowellConst748)
+```
+* ADD BULLETS OF NOTE HERE
+
+<br>
 % Traces with Powell Elevation below the Upper Basin DCP Trigger elevation of 3,525 ft in any month during the CY:
 ```{r ft.align="left", echo=FALSE}
 TabFormat(tab_Powell3525)
 ```
-\newpage
+
 % Traces with Powell Elevation below Minimum Power Pool in any month during the CY:
 ```{r ft.align="left", echo=FALSE}
 TabFormat(tab_Powell3490)
@@ -474,7 +501,7 @@ TabFormat(tab_Mead1050)
 ```{r ft.align="left", echo=FALSE}
 TabFormat(tab_Mead1045)
 ```
-\newpage
+
 % Traces with Lake Mead Elevation < 1,035 ft:
 ```{r ft.align="left", echo=FALSE}
 TabFormat(tab_Mead1035)
@@ -723,6 +750,7 @@ TSum <- function(x, y, z){
 
 LC_Condition <- c('Surplus','Normal', 'Shortage - Level 1', 'Shortage - Level 2', 'Shortage - Level 3')
 Year_new = c("2025","2026","2027", "2028", "2029")
+
 LCShortage_df <- data.frame(ESPRun = rep(c(Current_month, Previous_month), each = 5), 
                             Condition = rep(factor(LC_Condition, levels = LC_Condition)), 
                             Year_data = rep(Year_new, each = 10), 
@@ -754,7 +782,7 @@ LCShortage_df <- data.frame(ESPRun = rep(c(Current_month, Previous_month), each 
 
 #Figure to use to include shading and note about post-2026 operations:
 
-years_to_exclude = c(2023,2024) # Add years here as a comma separated list to exclude them from the figure below
+years_to_exclude = c(2023,2024,2025) # Add years here as a comma separated list to exclude them from the figure below
 
 ggplot(subset(LCShortage_df, !Year_data %in% years_to_exclude), aes(x = ESPRun, y = Trace_data, fill = Condition)) + geom_bar(position='stack', stat='identity') + theme_bw() + facet_grid(~Year_data, scales = "free_x") + labs(x = ' ',y = "Number of Traces") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) + scale_y_continuous(breaks = seq(0,35, by =5), expand = c(0,0)) + geom_rect(data = subset(LCShortage_df, Year_data > 2026), aes(xmin=-Inf, xmax = Inf, ymin = 0, ymax = Inf), fill = 'black', alpha = 0.03) + scale_fill_manual(values = c('#ddd6ac', '#a6cee3','#1f78b4','#b2df8a','#33a02c'), breaks = LC_Condition) + ggtitle(bquote("Lower Basin Operating Condition")) + labs(caption = bquote('Note: For modeling purposes, these projections assume a continuation of the Interim Guidelines, DCP and Minute 323 \nbeyond 2026. These agreements expire at the end of the 2026, and Reclamation is beginning a process \nto develop operating strategies for post-2026.')) + theme(plot.caption=element_text(hjust = 0, size = 10))
 
