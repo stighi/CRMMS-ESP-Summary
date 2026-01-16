@@ -41,7 +41,7 @@ library(ggpattern)
 Last_month_file <- "PreviousMonth/EnsembleOutput.xlsx"       #In file path use either / or \\, do NOT use \
 Current_month_file <- "CurrentMonth/EnsembleOutput.xlsx"
 
-EOCY <- "2025-12-01"            #EOCY for Powell/Mead elevation ranges in summary points.
+EOCY <- "2026-12-01"            #EOCY for Powell/Mead elevation ranges in summary points.
 PowellOT_WYrn <- "2026-01-01"   #WY for Powell Operating Tier and Release Volume tables.
 Year1 <- "2026-01-01"           #1st Yr Powell/MSCP tables. Code calculates Year2 (1st yr Mead tables).
 date <- Sys.Date()              #Use Sys.Date() when current date is in the same month as the ESP run. Replace with as.Date("YYYY-MM-DD") to specify a month different than current date.
